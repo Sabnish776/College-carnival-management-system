@@ -37,6 +37,13 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- Spring Boot Test (includes JUnit, Mockito, etc.) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Spring Boot Starter Data JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -100,6 +107,7 @@
     </dependencies>
 
     <build>
+        <finalName>cms</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
