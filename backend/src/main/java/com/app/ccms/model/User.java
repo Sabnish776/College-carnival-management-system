@@ -45,6 +45,7 @@ public class User {
     private Role role ;
 
     @Column(nullable = false,updatable = false)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime createdAt ;
 
     @PrePersist
