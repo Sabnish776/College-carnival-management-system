@@ -1,12 +1,18 @@
 package com.app.ccms.service;
+import com.app.ccms.DTO.LoginDTO;
 import com.app.ccms.DTO.RegisterDTO;
 import com.app.ccms.model.Role;
 import com.app.ccms.model.User;
 import com.app.ccms.repository.UserRepository;
 import com.app.ccms.utilities.JwtUtil;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UserService {
@@ -36,5 +42,19 @@ public class UserService {
         user.setRole(Role.STUDENT);
         System.out.println("Registering user: " + user.getEmail());
         userRepository.save(user);
+    }
+
+    public Map<String,Object> login(LoginDTO loginDTO) throws Exception {
+        User user = userRepository.findByEmail(loginDTO.getEmail());
+        if(user == null || !passwordEncoder.matches(loginDTO.getPassword(),user.getPassword()) ) {
+            throw new RuntimeException("Invalid username or password");
+        }
+        System.out.println("User found: " + user.getEmail());
+        Map<String, Object> response = new HashMap<>();
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+        response.put("token", token);
+        response.put("role", user.getRole().name());
+        response.put("message", "Login successful");
+        return response;
     }
 }

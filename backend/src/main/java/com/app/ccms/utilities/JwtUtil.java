@@ -20,22 +20,21 @@ public class JwtUtil {
 
     public String generateToken(String email , String role) {
         return Jwts.builder()
-                .setSubject(email)
+                .subject(email)
                 .claim("role", role)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(secretKey)
                 .compact();
     }
 
     public Claims getClaims(String token) {
-
         try{
-            return Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
+            return Jwts.parser()
+                    .verifyWith(secretKey)
                     .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                    .parseSignedClaims(token)
+                    .getPayload() ;
         }catch (Exception e){
             throw new RuntimeException("Invalid token");
         }

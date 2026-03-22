@@ -37,4 +37,17 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDTO loginDTO) {
+        try {
+            Map<String, Object> response = userService.login(loginDTO);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", e.getMessage()));
+        }
+
+    }
+
 }
