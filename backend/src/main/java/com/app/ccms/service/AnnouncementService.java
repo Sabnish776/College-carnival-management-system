@@ -4,6 +4,7 @@ import com.app.ccms.model.Announcement;
 import com.app.ccms.repository.AnnouncementRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,7 +27,9 @@ public class AnnouncementService {
     }
 
     public Map<String, Object> getAnnouncements() {
-        return Map.of("announcements", announcementRepository.findAll()  ) ;
+        return Map.of("announcements", announcementRepository.findAll().stream()
+                .sorted(Comparator.comparing(Announcement::getCreatedAt).reversed())
+                .toList());
     }
 
     public Map<String, String> deleteAnnouncement(UUID announcementId) {

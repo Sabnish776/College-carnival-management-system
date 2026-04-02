@@ -3,6 +3,7 @@ import com.app.ccms.model.Event;
 import com.app.ccms.repository.EventRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -16,7 +17,8 @@ public class EventService {
     }
 
     public Map<String, Object> getAllEvents() {
-        return Map.of("events",eventRepository.findAll()) ;
+        return Map.of("events",eventRepository.findAll().stream()
+                .sorted(Comparator.comparing(Event::getEventDateTime)).toList());
     }
 
     public Event getEventById(UUID eventId) {

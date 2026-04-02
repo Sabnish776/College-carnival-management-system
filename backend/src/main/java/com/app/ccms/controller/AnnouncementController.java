@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api")
 public class AnnouncementController {
 
     private final AnnouncementService  announcementService;
