@@ -1,25 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GraduationCap, LogOut, Calendar, Ticket, Bell, LayoutDashboard, Search, Filter, Loader2 } from 'lucide-react';
-import { Button } from '../components/ui';
-import { EventCard } from '../components/ui/EventCard';
+import { GraduationCap, LogOut, Calendar, Ticket, Bell, LayoutDashboard, Search, Filter, Loader2, User, Megaphone } from 'lucide-react';
+import { Button, EventCard, AnnouncementCard } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import { Event } from '../types/event';
+import { Announcement } from '../types/announcement';
 import { cn } from '../lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 type Tab = 'events' | 'schedule' | 'proshow' | 'announcements';
 
 export const StudentDashboard: React.FC = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>('events');
   const [events, setEvents] = useState<Event[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (activeTab === 'events') {
       fetchEvents();
+    } else if (activeTab === 'announcements') {
+      fetchAnnouncements();
     }
   }, [activeTab]);
 
@@ -30,6 +35,18 @@ export const StudentDashboard: React.FC = () => {
       setEvents(data.events || []);
     } catch (error) {
       console.error('Failed to fetch events:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchAnnouncements = async () => {
+    setIsLoading(true);
+    try {
+      const data = await api.get('/api/announcements');
+      setAnnouncements(data.announcements || []);
+    } catch (error) {
+      console.error('Failed to fetch announcements:', error);
     } finally {
       setIsLoading(false);
     }
@@ -81,10 +98,16 @@ export const StudentDashboard: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="hidden lg:flex flex-col items-end mr-2">
-              <p className="text-sm font-bold text-zinc-900">{user?.email.split('@')[0]}</p>
+            <button 
+              onClick={() => navigate('/profile')}
+              className="hidden lg:flex flex-col items-end mr-2 text-right hover:opacity-80 transition-opacity"
+            >
+              <p className="text-sm font-bold text-zinc-900 flex items-center gap-2">
+                {user?.name}
+                <User size={14} className="text-zinc-400" />
+              </p>
               <p className="text-[10px] text-zinc-400 font-medium uppercase tracking-wider">{user?.role}</p>
-            </div>
+            </button>
             <Button variant="secondary" onClick={logout} className="p-2 sm:px-4 sm:py-2">
               <LogOut size={18} />
               <span className="hidden sm:inline ml-2">Sign Out</span>
@@ -152,7 +175,45 @@ export const StudentDashboard: React.FC = () => {
               </motion.div>
             )}
 
-            {activeTab !== 'events' && (
+            {activeTab === 'announcements' && (
+              <motion.div
+                key="announcements"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="space-y-8"
+              >
+                <div>
+                  <h2 className="text-3xl font-bold text-zinc-900 tracking-tight">Announcements</h2>
+                  <p className="text-zinc-500 mt-2">Stay updated with the latest news and broadcasts.</p>
+                </div>
+
+                {isLoading ? (
+                  <div className="flex flex-col items-center justify-center py-20 text-zinc-400">
+                    <Loader2 className="animate-spin mb-4" size={32} />
+                    <p className="text-sm font-medium">Fetching announcements...</p>
+                  </div>
+                ) : announcements.length > 0 ? (
+                  <div className="flex flex-col gap-6 max-w-4xl">
+                    {announcements.map((announcement) => (
+                      <AnnouncementCard key={announcement.id} announcement={announcement} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="bg-white border border-dashed border-zinc-300 rounded-[2rem] py-20 flex flex-col items-center justify-center text-center px-6">
+                    <div className="w-16 h-16 bg-zinc-50 rounded-2xl flex items-center justify-center text-zinc-300 mb-4">
+                      <Megaphone size={32} />
+                    </div>
+                    <h3 className="text-lg font-bold text-zinc-900">No announcements yet</h3>
+                    <p className="text-zinc-500 text-sm mt-1 max-w-xs">
+                      Check back later for important updates from the carnival committee.
+                    </p>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {activeTab !== 'events' && activeTab !== 'announcements' && (
               <motion.div
                 key={activeTab}
                 initial={{ opacity: 0, y: 20 }}

@@ -90,17 +90,16 @@ export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, onEdit, on
             
             <motion.div
               layoutId={`card-${event.id}`}
-              initial={{ rotateY: 180, scale: 0.8, opacity: 0 }}
-              animate={{ rotateY: 0, scale: 1, opacity: 1 }}
-              exit={{ rotateY: 180, scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
               transition={{ 
                 type: "spring", 
                 damping: 25, 
-                stiffness: 200,
-                duration: 0.6
+                stiffness: 300,
+                duration: 0.3
               }}
               className="relative w-full max-w-2xl bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row"
-              style={{ transformStyle: "preserve-3d" }}
             >
               <button 
                 onClick={() => setIsOpen(false)}

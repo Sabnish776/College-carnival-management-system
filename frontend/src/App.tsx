@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { AuthPage } from './pages/AuthPage';
 import { StudentDashboard } from './pages/StudentDashboard';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { ProfilePage } from './pages/ProfilePage';
 
 const AppRoutes = () => {
   const { isLoggedIn, isLoading, user } = useAuth();
@@ -40,6 +41,12 @@ const AppRoutes = () => {
       <Route 
         path="/admin" 
         element={isLoggedIn && user?.role === 'ADMIN' ? <AdminDashboard /> : <Navigate to="/auth" replace />} 
+      />
+
+      {/* Protected Profile Route */}
+      <Route 
+        path="/profile" 
+        element={isLoggedIn ? <ProfilePage /> : <Navigate to="/auth" replace />} 
       />
 
       <Route 

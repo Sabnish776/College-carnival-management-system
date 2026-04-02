@@ -24,10 +24,19 @@ export const AuthPage: React.FC = () => {
 
     try {
       const data = await api.post('/api/auth/login', { email, password });
-      login(data.token, { email, role: data.role || 'STUDENT' });
+      
+      // Store token first so subsequent requests are authenticated
+      localStorage.setItem('auth_token', data.token);
+      
+      // Fetch current user details
+      const userResponse = await api.get('/api/users/me');
+      const userData = userResponse.user;
+      
+      login(data.token, userData);
       toast.success(data.message || 'Login successful');
     } catch (error: any) {
       toast.error(error.message || 'Login failed');
+      localStorage.removeItem('auth_token'); // Cleanup if fetching user details fails
     } finally {
       setIsLoading(false);
     }
