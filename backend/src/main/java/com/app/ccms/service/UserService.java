@@ -57,4 +57,12 @@ public class UserService {
         response.put("message", "Login successful");
         return response;
     }
+
+    public User getUserByEmail(String username) {
+        User user = userRepository.findByEmail(username);
+        if(user == null) {
+            throw new RuntimeException("User not found with email: " + username);
+        }
+        return user;
+    }
 }
