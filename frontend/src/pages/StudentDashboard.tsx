@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import { Event } from '../types/event';
 import { Announcement } from '../types/announcement';
+import { Registration } from '../types/registration';
+import { toast } from 'sonner';
 import { cn } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,8 +19,13 @@ export const StudentDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('events');
   const [events, setEvents] = useState<Event[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    fetchRegistrations();
+  }, []);
 
   useEffect(() => {
     if (activeTab === 'events') {
@@ -27,6 +34,15 @@ export const StudentDashboard: React.FC = () => {
       fetchAnnouncements();
     }
   }, [activeTab]);
+
+  const fetchRegistrations = async () => {
+    try {
+      const data = await api.get('/api/registrations/me');
+      setRegistrations(data.registrations || []);
+    } catch (error) {
+      console.error('Failed to fetch registrations:', error);
+    }
+  };
 
   const fetchEvents = async () => {
     setIsLoading(true);
@@ -50,6 +66,21 @@ export const StudentDashboard: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleRegister = async (eventId: number) => {
+    try {
+      await api.post(`/api/registrations/${eventId}`, {});
+      toast.success('Registration successful');
+      fetchRegistrations();
+    } catch (error: any) {
+      toast.error(error.message || 'Registration failed');
+      throw error;
+    }
+  };
+
+  const isEventRegistered = (eventId: number) => {
+    return registrations.some(reg => reg.eventId === eventId.toString());
   };
 
   const filteredEvents = events.filter(event => 
@@ -158,7 +189,12 @@ export const StudentDashboard: React.FC = () => {
                 ) : filteredEvents.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {filteredEvents.map((event) => (
-                      <EventCard key={event.id} event={event} />
+                      <EventCard 
+                        key={event.id} 
+                        event={event} 
+                        isRegistered={isEventRegistered(event.id)}
+                        onRegister={handleRegister}
+                      />
                     ))}
                   </div>
                 ) : (

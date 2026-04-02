@@ -8,12 +8,15 @@ import { cn } from '../../lib/utils';
 interface EventCardProps {
   event: Event;
   isAdmin?: boolean;
+  isRegistered?: boolean;
   onEdit?: (event: Event) => void;
   onDelete?: (id: number) => void;
+  onRegister?: (id: number) => Promise<void>;
 }
 
-export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, onEdit, onDelete }) => {
+export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, isRegistered, onEdit, onDelete, onRegister }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -24,6 +27,21 @@ export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, onEdit, on
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const handleRegister = async () => {
+    if (isRegistered || isRegistering) return;
+    
+    if (!window.confirm('Are you sure you want to register for this event? Notice: You cannot cancel the registration after clicking register.')) {
+      return;
+    }
+
+    setIsRegistering(true);
+    try {
+      await onRegister?.(event.id);
+    } finally {
+      setIsRegistering(false);
+    }
   };
 
   return (
@@ -155,11 +173,27 @@ export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, onEdit, on
                   </p>
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-zinc-100 flex gap-3">
+                <div className="mt-10 pt-6 border-t border-zinc-100 flex flex-col gap-3">
                   {!isAdmin && (
-                    <Button className="flex-1 py-4 text-base shadow-lg shadow-zinc-900/20">
-                      Register Now
-                    </Button>
+                    <>
+                      <Button 
+                        className={cn(
+                          "flex-1 py-4 text-base shadow-lg transition-all",
+                          isRegistered 
+                            ? "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20" 
+                            : "shadow-zinc-900/20"
+                        )}
+                        onClick={handleRegister}
+                        disabled={isRegistered || isRegistering}
+                      >
+                        {isRegistering ? 'Registering...' : isRegistered ? 'Registered' : 'Register Now'}
+                      </Button>
+                      {!isRegistered && (
+                        <p className="text-[10px] text-zinc-400 text-center font-medium uppercase tracking-wider">
+                          Notice: Registration cannot be cancelled after confirmation
+                        </p>
+                      )}
+                    </>
                   )}
                   {isAdmin && (
                     <>
