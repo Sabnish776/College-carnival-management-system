@@ -35,11 +35,12 @@ public class Registration {
     private Event event;
 
     @Column(nullable = false)
-    LocalDateTime registeredAt ;
+    private LocalDateTime registeredAt ;
 
     @PrePersist
     protected void onRegister(){
         this.registeredAt = LocalDateTime.now();
     }
+
 
 }
