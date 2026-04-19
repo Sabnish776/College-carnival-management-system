@@ -15,16 +15,16 @@ export const Button: React.FC<ButtonProps> = ({
   ...props 
 }) => {
   const variants = {
-    primary: "bg-zinc-900 text-white hover:bg-zinc-800 shadow-sm",
-    secondary: "bg-white text-zinc-900 border border-zinc-200 hover:bg-zinc-50 shadow-sm",
-    ghost: "bg-transparent text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
+    primary: "bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white hover:from-indigo-700 hover:to-fuchsia-700 shadow-lg shadow-indigo-500/25 border border-white/10",
+    secondary: "glass text-slate-800 hover:bg-white/80",
+    ghost: "bg-transparent text-slate-600 hover:text-indigo-600 hover:bg-indigo-50"
   };
 
   return (
     <button
       disabled={isLoading || props.disabled}
       className={cn(
-        "relative flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-all active:scale-[0.98] disabled:opacity-70 disabled:active:scale-100",
+        "relative flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-sm transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] disabled:opacity-70 disabled:hover:translate-y-0 disabled:active:scale-100",
         variants[variant],
         className
       )}
@@ -56,7 +56,7 @@ export const InputField: React.FC<InputFieldProps> = ({
       </div>
       <input
         className={cn(
-          "w-full bg-zinc-50 border border-zinc-200 rounded-xl py-3 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all placeholder:text-zinc-400",
+          "w-full bg-white/50 backdrop-blur-sm border border-slate-200/60 rounded-xl py-3 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all placeholder:text-slate-400 focus:bg-white/80",
           className
         )}
         {...props}

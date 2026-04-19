@@ -25,21 +25,22 @@ export const AnnouncementCard: React.FC<AnnouncementCardProps> = ({ announcement
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white p-6 rounded-[2rem] border border-zinc-200 shadow-sm hover:shadow-md transition-all group relative"
+      className="glass p-6 rounded-[2rem] hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 transition-all group relative overflow-hidden"
     >
+      <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-indigo-500 to-fuchsia-500 opacity-0 group-hover:opacity-100 transition-opacity" />
       <div className="flex items-start gap-4">
-        <div className="w-12 h-12 bg-zinc-100 rounded-2xl flex items-center justify-center text-zinc-600 shrink-0">
-          <Bell size={24} />
+        <div className="w-12 h-12 bg-gradient-to-br from-indigo-50 to-fuchsia-50 rounded-2xl flex items-center justify-center text-indigo-600 shrink-0 border border-indigo-100 shadow-inner">
+          <Bell size={24} className="group-hover:scale-110 transition-transform" />
         </div>
         <div className="flex-grow pr-8">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-            <h3 className="text-lg font-bold text-zinc-900">{announcement.title}</h3>
-            <div className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest bg-zinc-50 px-2.5 py-1 rounded-full border border-zinc-100 w-fit">
+            <h3 className="text-lg font-bold text-slate-800 group-hover:text-indigo-900 transition-colors">{announcement.title}</h3>
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-indigo-500 uppercase tracking-widest bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100 w-fit">
               <Clock size={12} />
               {formatDate(announcement.createdAt)}
             </div>
           </div>
-          <p className="text-zinc-500 text-sm leading-relaxed whitespace-pre-wrap">{announcement.description}</p>
+          <p className="text-slate-500 text-sm leading-relaxed whitespace-pre-wrap">{announcement.description}</p>
         </div>
       </div>
 

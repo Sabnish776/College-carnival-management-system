@@ -49,28 +49,28 @@ export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, isRegister
       <motion.div
         layoutId={`card-${event.id}`}
         onClick={() => setIsOpen(true)}
-        className="bg-white p-5 rounded-3xl border border-zinc-200 shadow-sm hover:shadow-md transition-all cursor-pointer group flex flex-col h-full"
-        whileHover={{ y: -4 }}
+        className="glass p-5 rounded-3xl cursor-pointer group flex flex-col h-full transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-1 relative overflow-hidden"
       >
-        <div className="flex justify-between items-start mb-3">
-          <span className="px-3 py-1 bg-zinc-100 text-zinc-600 text-[10px] font-bold uppercase tracking-widest rounded-full">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-fuchsia-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="flex justify-between items-start mb-3 relative z-10">
+          <span className="px-3 py-1 bg-gradient-to-r from-indigo-100 to-fuchsia-100 text-indigo-700 text-[10px] font-bold uppercase tracking-widest rounded-full border border-indigo-200/50">
             {event.category}
           </span>
-          <div className="text-zinc-400 group-hover:text-zinc-900 transition-colors">
+          <div className="text-indigo-300 group-hover:text-fuchsia-500 transition-colors duration-300">
             <Calendar size={18} />
           </div>
         </div>
         
-        <h3 className="text-lg font-bold text-zinc-900 mb-2 line-clamp-1">{event.title}</h3>
-        <p className="text-zinc-500 text-sm line-clamp-2 mb-4 flex-grow">{event.description}</p>
+        <h3 className="text-lg font-bold text-zinc-900 mb-2 line-clamp-1 relative z-10 group-hover:text-indigo-900 transition-colors">{event.title}</h3>
+        <p className="text-zinc-600 text-sm line-clamp-2 mb-4 flex-grow relative z-10">{event.description}</p>
         
-        <div className="space-y-2 pt-4 border-t border-zinc-50">
-          <div className="flex items-center gap-2 text-zinc-500 text-xs">
-            <Clock size={14} />
+        <div className="space-y-2 pt-4 border-t border-indigo-100/50 relative z-10">
+          <div className="flex items-center gap-2 text-indigo-900/60 text-xs font-medium">
+            <Clock size={14} className="text-indigo-400" />
             <span>{formatDate(event.eventDateTime)}</span>
           </div>
-          <div className="flex items-center gap-2 text-zinc-500 text-xs">
-            <MapPin size={14} />
+          <div className="flex items-center gap-2 text-indigo-900/60 text-xs font-medium">
+            <MapPin size={14} className="text-fuchsia-400" />
             <span className="line-clamp-1">{event.venue}</span>
           </div>
         </div>
@@ -106,74 +106,66 @@ export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, isRegister
               className="absolute inset-0 bg-zinc-900/60 backdrop-blur-sm"
             />
             
-            <motion.div
+            <motion.div 
               layoutId={`card-${event.id}`}
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ 
-                type: "spring", 
-                damping: 25, 
-                stiffness: 300,
-                duration: 0.3
-              }}
-              className="relative w-full max-w-2xl bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row"
+              className="relative w-full max-w-3xl glass-dark rounded-[2rem] overflow-hidden flex flex-col md:flex-row"
             >
               <button 
                 onClick={() => setIsOpen(false)}
-                className="absolute top-6 right-6 z-10 p-2 bg-zinc-100 hover:bg-zinc-200 rounded-full text-zinc-500 transition-colors"
+                className="absolute top-6 right-6 z-20 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white/70 transition-colors backdrop-blur-md"
               >
                 <X size={20} />
               </button>
 
-              <div className="w-full md:w-2/5 bg-zinc-900 p-8 text-white flex flex-col justify-between">
-                <div>
-                  <span className="px-3 py-1 bg-white/10 text-white/80 text-[10px] font-bold uppercase tracking-widest rounded-full border border-white/10">
+              <div className="w-full md:w-2/5 bg-gradient-to-br from-indigo-900 to-fuchsia-900 p-8 text-white flex flex-col justify-between relative overflow-hidden">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+                <div className="relative z-10">
+                  <span className="px-3 py-1 bg-white/10 text-white text-[10px] font-bold uppercase tracking-widest rounded-full border border-white/20">
                     {event.category}
                   </span>
                   <h2 className="text-3xl font-bold mt-4 leading-tight">{event.title}</h2>
                 </div>
                 
-                <div className="space-y-4 mt-8">
-                  <div className="flex items-center gap-3 text-white/70">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+                <div className="space-y-4 mt-8 relative z-10">
+                  <div className="flex items-center gap-3 text-indigo-100">
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/10">
                       <Calendar size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider opacity-50">Date & Time</p>
+                      <p className="text-[10px] uppercase tracking-wider opacity-60">Date & Time</p>
                       <p className="text-sm font-medium">{formatDate(event.eventDateTime)}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-white/70">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+                  <div className="flex items-center gap-3 text-indigo-100">
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/10">
                       <MapPin size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider opacity-50">Venue</p>
+                      <p className="text-[10px] uppercase tracking-wider opacity-60">Venue</p>
                       <p className="text-sm font-medium">{event.venue}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-white/70">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+                  <div className="flex items-center gap-3 text-indigo-100">
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/10">
                       <Users size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider opacity-50">Capacity</p>
+                      <p className="text-[10px] uppercase tracking-wider opacity-60">Capacity</p>
                       <p className="text-sm font-medium">{event.maxParticipants} Participants</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="w-full md:w-3/5 p-8 sm:p-10 flex flex-col">
+              <div className="w-full md:w-3/5 p-8 sm:p-10 flex flex-col bg-white/90 backdrop-blur-xl">
                 <div className="flex-grow">
-                  <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">About Event</h4>
-                  <p className="text-zinc-600 leading-relaxed whitespace-pre-wrap">
+                  <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-4">About Event</h4>
+                  <p className="text-slate-600 leading-relaxed whitespace-pre-wrap">
                     {event.description}
                   </p>
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-zinc-100 flex flex-col gap-3">
+                <div className="mt-10 pt-6 border-t border-slate-100 flex flex-col gap-3">
                   {!isAdmin && (
                     <>
                       <Button 

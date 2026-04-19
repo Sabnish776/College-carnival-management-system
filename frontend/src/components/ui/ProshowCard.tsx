@@ -49,25 +49,24 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
       <motion.div
         layoutId={`proshow-card-${proshow.id}`}
         onClick={() => setIsOpen(true)}
-        className="bg-zinc-900 text-white p-6 rounded-3xl border border-zinc-800 shadow-xl hover:shadow-2xl transition-all cursor-pointer group flex flex-col h-full relative overflow-hidden"
-        whileHover={{ y: -4 }}
+        className="glass-dark text-white p-6 rounded-3xl cursor-pointer group flex flex-col h-full relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-fuchsia-500/20 hover:-translate-y-1"
       >
-        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-bl-full -z-10 transition-transform group-hover:scale-110" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-fuchsia-500/20 rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-125" />
         
-        <div className="flex justify-between items-start mb-4">
-          <span className="px-3 py-1 bg-white/10 text-white text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1">
+        <div className="flex justify-between items-start mb-4 relative z-10">
+          <span className="px-3 py-1 bg-gradient-to-r from-fuchsia-600/80 to-purple-600/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1 border border-white/20">
             <Mic2 size={12} />
             PRO-SHOW
           </span>
           {proshow.ticketPrice > 0 ? (
-            <span className="text-emerald-400 font-bold text-sm bg-emerald-400/10 px-2 py-1 rounded-lg">₹{proshow.ticketPrice}</span>
+            <span className="text-emerald-400 font-bold text-sm bg-emerald-400/10 px-2 py-1 rounded-lg border border-emerald-400/20">₹{proshow.ticketPrice}</span>
           ) : (
-            <span className="text-zinc-400 font-bold text-sm bg-zinc-800 px-2 py-1 rounded-lg">FREE</span>
+            <span className="text-fuchsia-300 font-bold text-sm bg-fuchsia-900/40 px-2 py-1 rounded-lg border border-fuchsia-500/20">FREE</span>
           )}
         </div>
         
-        <h3 className="text-xl font-bold text-white mb-1 line-clamp-1">{proshow.title}</h3>
-        <p className="text-indigo-300 font-medium text-sm mb-4">feat. {proshow.artist}</p>
+        <h3 className="text-xl font-bold text-white mb-1 line-clamp-1 relative z-10 group-hover:text-fuchsia-300 transition-colors">{proshow.title}</h3>
+        <p className="text-fuchsia-200 font-medium text-sm mb-4 relative z-10">feat. {proshow.artist}</p>
         
         <div className="space-y-3 pt-4 border-t border-zinc-800/50 flex-grow">
           <div className="flex items-center gap-3 text-zinc-400 text-xs">
@@ -108,7 +107,7 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-zinc-900/80 backdrop-blur-md"
+              className="absolute inset-0 bg-zinc-900/60 backdrop-blur-sm"
             />
             
             <motion.div
@@ -122,7 +121,7 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
                 stiffness: 300,
                 duration: 0.3
               }}
-              className="relative w-full max-w-2xl bg-zinc-900 rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-zinc-800"
+              className="relative w-full max-w-3xl glass-dark rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row border border-zinc-700/50"
             >
               <button 
                 onClick={() => setIsOpen(false)}
@@ -131,7 +130,7 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
                 <X size={20} />
               </button>
 
-              <div className="w-full md:w-2/5 bg-gradient-to-br from-indigo-600 to-violet-900 p-8 text-white flex flex-col justify-between relative overflow-hidden">
+              <div className="w-full md:w-2/5 bg-gradient-to-br from-fuchsia-900 to-indigo-900 p-8 text-white flex flex-col justify-between relative overflow-hidden">
                 <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
                 <div className="relative z-10">
                   <span className="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-full border border-white/20 shadow-xl">
@@ -165,7 +164,7 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
                 </div>
               </div>
 
-              <div className="w-full md:w-3/5 p-8 sm:p-10 flex flex-col bg-zinc-900 text-zinc-300">
+              <div className="w-full md:w-3/5 p-8 sm:p-10 flex flex-col bg-zinc-900/90 text-zinc-300 backdrop-blur-xl">
                 <div className="flex-grow">
                   <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">About the Show</h4>
                   <p className="text-zinc-400 leading-relaxed whitespace-pre-wrap">
