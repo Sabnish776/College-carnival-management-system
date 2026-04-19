@@ -3,7 +3,6 @@ package com.app.ccms.controller;
 import com.app.ccms.DTO.LoginDTO;
 import com.app.ccms.DTO.RegisterDTO;
 
-import com.app.ccms.model.User;
 import com.app.ccms.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

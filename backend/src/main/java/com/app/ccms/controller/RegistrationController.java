@@ -2,7 +2,6 @@ package com.app.ccms.controller;
 
 import com.app.ccms.service.RegistrationService;
 import com.app.ccms.service.UserService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;

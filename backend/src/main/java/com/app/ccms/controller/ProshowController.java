@@ -2,7 +2,6 @@ package com.app.ccms.controller;
 
 import com.app.ccms.model.ProShow;
 import com.app.ccms.service.ProshowService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;

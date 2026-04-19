@@ -5,9 +5,6 @@ import com.app.ccms.model.Role;
 import com.app.ccms.model.User;
 import com.app.ccms.repository.UserRepository;
 import com.app.ccms.utilities.JwtUtil;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +15,11 @@ import java.util.Map;
 public class UserService {
 
     private final JwtUtil jwtUtil;
-    private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
 
-    UserService(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, JwtUtil jwtUtil , UserRepository userRepository) {
-        this.userDetailsService = userDetailsService;
+    UserService(PasswordEncoder passwordEncoder, JwtUtil jwtUtil , UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
