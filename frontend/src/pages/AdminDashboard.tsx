@@ -1,31 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ShieldCheck, LogOut, Users, Settings, BarChart3, PlusCircle, Calendar, Search, Filter, Loader2, Trash2, Edit3, User, Megaphone, Send, LayoutDashboard } from 'lucide-react';
-import { Button, EventCard, EventForm, AnnouncementCard, AnnouncementForm } from '../components/ui';
+import { Button, EventCard, EventForm, AnnouncementCard, AnnouncementForm, ProshowCard, ProshowForm } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import { Event } from '../types/event';
 import { Announcement } from '../types/announcement';
+import { Proshow } from '../types/proshow';
 import { toast } from 'sonner';
 import { cn } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
 
-type AdminTab = 'overview' | 'events' | 'announcements';
+type AdminTab = 'overview' | 'events' | 'proshows' | 'announcements';
 
 export const AdminDashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<AdminTab>('overview');
   const [events, setEvents] = useState<Event[]>([]);
+  const [proshows, setProshows] = useState<Proshow[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isAnnouncementFormOpen, setIsAnnouncementFormOpen] = useState(false);
+  const [isProshowFormOpen, setIsProshowFormOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+  const [editingProshow, setEditingProshow] = useState<Proshow | null>(null);
 
   useEffect(() => {
     fetchEvents();
+    fetchProshows();
     fetchAnnouncements();
   }, []);
 
@@ -37,6 +42,19 @@ export const AdminDashboard: React.FC = () => {
     } catch (error) {
       console.error('Failed to fetch events:', error);
       toast.error('Failed to load events');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchProshows = async () => {
+    setIsLoading(true);
+    try {
+      const data = await api.get('/api/proshows');
+      setProshows(data.proshows || []);
+    } catch (error) {
+      console.error('Failed to fetch proshows:', error);
+      toast.error('Failed to load proshows');
     } finally {
       setIsLoading(false);
     }
@@ -107,6 +125,41 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
+  const handleCreateProshow = async (data: any) => {
+    try {
+      await api.post('/api/admin/proshows', data);
+      toast.success('Proshow created successfully');
+      setIsProshowFormOpen(false);
+      fetchProshows();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to create proshow');
+    }
+  };
+
+  const handleUpdateProshow = async (data: any) => {
+    if (!editingProshow) return;
+    try {
+      await api.put(`/api/admin/proshows/${editingProshow.id}`, data);
+      toast.success('Proshow updated successfully');
+      setEditingProshow(null);
+      setIsProshowFormOpen(false);
+      fetchProshows();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to update proshow');
+    }
+  };
+
+  const handleDeleteProshow = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this proshow?')) return;
+    try {
+      await api.delete(`/api/admin/proshows/${id}`);
+      toast.success('Proshow deleted successfully');
+      fetchProshows();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to delete proshow');
+    }
+  };
+
   const filteredEvents = events.filter(event => 
     event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     event.category.toLowerCase().includes(searchQuery.toLowerCase())
@@ -115,6 +168,7 @@ export const AdminDashboard: React.FC = () => {
   const navItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'events', label: 'Events', icon: Calendar },
+    { id: 'proshows', label: 'Pro-Shows', icon: Calendar }, // Could import Ticket instead
     { id: 'announcements', label: 'Announcements', icon: Megaphone },
   ];
 
@@ -336,6 +390,69 @@ export const AdminDashboard: React.FC = () => {
                 )}
               </motion.div>
             )}
+
+            {activeTab === 'proshows' && (
+              <motion.div
+                key="proshows"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="space-y-8"
+              >
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-zinc-900 tracking-tight">Pro-Show Management</h2>
+                    <p className="text-zinc-500 mt-2">Manage artists, tickets, and pro-show details.</p>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <Button 
+                      className="bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-600/20"
+                      onClick={() => { setEditingProshow(null); setIsProshowFormOpen(true); }}
+                    >
+                      <PlusCircle size={18} />
+                      New Pro-Show
+                    </Button>
+                  </div>
+                </div>
+
+                {isLoading ? (
+                  <div className="flex flex-col items-center justify-center py-20 text-zinc-400">
+                    <Loader2 className="animate-spin mb-4" size={32} />
+                    <p className="text-sm font-medium">Loading pro-shows...</p>
+                  </div>
+                ) : proshows.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {proshows.map((proshow) => (
+                      <ProshowCard 
+                        key={proshow.id} 
+                        proshow={proshow} 
+                        isAdmin={true}
+                        onEdit={(ps) => { setEditingProshow(ps); setIsProshowFormOpen(true); }}
+                        onDelete={handleDeleteProshow}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="bg-white border border-dashed border-zinc-300 rounded-[2rem] py-20 flex flex-col items-center justify-center text-center px-6">
+                    <div className="w-16 h-16 bg-zinc-50 rounded-2xl flex items-center justify-center text-zinc-300 mb-4">
+                      <Calendar size={32} />
+                    </div>
+                    <h3 className="text-lg font-bold text-zinc-900">No pro-shows found</h3>
+                    <p className="text-zinc-500 text-sm mt-1 max-w-xs">
+                      Start by creating your first pro-show.
+                    </p>
+                    <Button 
+                      variant="secondary" 
+                      className="mt-6"
+                      onClick={() => { setEditingProshow(null); setIsProshowFormOpen(true); }}
+                    >
+                      Create Pro-Show
+                    </Button>
+                  </div>
+                )}
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
       </main>
@@ -347,6 +464,13 @@ export const AdminDashboard: React.FC = () => {
             event={editingEvent}
             onClose={() => { setIsFormOpen(false); setEditingEvent(null); }}
             onSubmit={editingEvent ? handleUpdateEvent : handleCreateEvent}
+          />
+        )}
+        {isProshowFormOpen && (
+          <ProshowForm 
+            proshow={editingProshow}
+            onClose={() => { setIsProshowFormOpen(false); setEditingProshow(null); }}
+            onSubmit={editingProshow ? handleUpdateProshow : handleCreateProshow}
           />
         )}
         {isAnnouncementFormOpen && (
