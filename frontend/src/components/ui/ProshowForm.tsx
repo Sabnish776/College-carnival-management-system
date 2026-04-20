@@ -49,12 +49,12 @@ export const ProshowForm: React.FC<ProshowFormProps> = ({ proshow, onSubmit, onC
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-zinc-900/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden">
-        <div className="p-6 border-b border-zinc-100 flex justify-between items-center">
-          <h3 className="text-xl font-bold text-zinc-900">
+      <div className="relative w-full max-w-lg bg-surface border border-border-soft rounded-[2rem] shadow-2xl overflow-hidden glass-panel">
+        <div className="p-6 border-b border-border-soft flex justify-between items-center bg-ivory">
+          <h3 className="text-xl font-bold font-serif text-text-primary">
             {proshow ? 'Edit Proshow' : 'Create New Proshow'}
           </h3>
-          <button onClick={onClose} className="p-2 hover:bg-zinc-100 rounded-full text-zinc-400 transition-colors">
+          <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full text-text-secondary transition-colors">
             <X size={20} />
           </button>
         </div>
@@ -70,13 +70,13 @@ export const ProshowForm: React.FC<ProshowFormProps> = ({ proshow, onSubmit, onC
           />
           
           <div className="space-y-1.5">
-            <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider ml-1">Description</label>
+            <label className="text-xs font-bold text-text-secondary uppercase tracking-widest ml-1">Description</label>
             <textarea
               required
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Describe the proshow..."
-              className="w-full bg-zinc-50 border border-zinc-200 rounded-xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-zinc-900/5 focus:border-zinc-900 transition-all min-h-[100px]"
+              className="w-full bg-surface border border-border-soft rounded-xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all min-h-[100px] placeholder:text-text-secondary"
             />
           </div>
 
@@ -119,7 +119,7 @@ export const ProshowForm: React.FC<ProshowFormProps> = ({ proshow, onSubmit, onC
           />
         </form>
 
-        <div className="p-6 border-t border-zinc-100 flex gap-3">
+        <div className="p-6 border-t border-border-soft flex gap-3 bg-ivory">
           <Button variant="secondary" className="flex-1" onClick={onClose}>
             Cancel
           </Button>

@@ -15,9 +15,9 @@ export const Button: React.FC<ButtonProps> = ({
   ...props 
 }) => {
   const variants = {
-    primary: "bg-gradient-to-r from-indigo-600 to-fuchsia-600 text-white hover:from-indigo-700 hover:to-fuchsia-700 shadow-lg shadow-indigo-500/25 border border-white/10",
-    secondary: "glass text-slate-800 hover:bg-white/80",
-    ghost: "bg-transparent text-slate-600 hover:text-indigo-600 hover:bg-indigo-50"
+    primary: "bg-gradient-to-r from-primary to-primary-dark text-background hover:brightness-110 shadow-[0_0_15px_rgba(212,175,55,0.4)] border border-primary-light/50 font-bold tracking-wide",
+    secondary: "glass text-text-primary hover:bg-surface-light hover:border-primary/50 shadow-sm transition-colors",
+    ghost: "bg-transparent text-text-secondary hover:text-primary hover:bg-primary/10 border border-transparent transition-colors"
   };
 
   return (
@@ -46,17 +46,17 @@ export const InputField: React.FC<InputFieldProps> = ({
   className,
   ...props 
 }) => (
-  <div className="space-y-1.5">
-    <label className="text-xs font-medium text-zinc-500 uppercase tracking-wider ml-1">
+  <div className="space-y-1.5 ">
+    <label className="text-xs font-bold text-primary uppercase tracking-widest ml-1 opacity-80">
       {label}
     </label>
     <div className="relative group">
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-zinc-900 transition-colors">
+      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary group-focus-within:text-primary transition-colors">
         <Icon size={18} />
       </div>
       <input
         className={cn(
-          "w-full bg-white/50 backdrop-blur-sm border border-slate-200/60 rounded-xl py-3 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all placeholder:text-slate-400 focus:bg-white/80",
+          "w-full bg-[#0a0a0a] border border-border-soft rounded-xl py-3 pl-10 pr-4 text-sm outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all placeholder:text-text-secondary/50 focus:bg-surface text-text-primary",
           className
         )}
         {...props}

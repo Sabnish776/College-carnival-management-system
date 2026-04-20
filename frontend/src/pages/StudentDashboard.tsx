@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GraduationCap, LogOut, Calendar, Ticket, Bell, LayoutDashboard, Search, Filter, Loader2, User, Megaphone } from 'lucide-react';
+import { GraduationCap, LogOut, Calendar, Ticket, Bell, LayoutDashboard, Search, Filter, Loader2, User, Megaphone, Menu, X } from 'lucide-react';
 import { Button, EventCard, AnnouncementCard, ProshowCard, ScheduleTimeline, TimelineItem } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
@@ -18,6 +18,7 @@ export const StudentDashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<Tab>('events');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [events, setEvents] = useState<Event[]>([]);
   const [proshows, setProshows] = useState<Proshow[]>([]);
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
@@ -98,7 +99,7 @@ export const StudentDashboard: React.FC = () => {
     }
   };
 
-  const handleRegister = async (eventId: number) => {
+  const handleRegister = async (eventId: string) => {
     try {
       await api.post(`/api/registrations/${eventId}`, {});
       toast.success('Registration successful');
@@ -120,8 +121,8 @@ export const StudentDashboard: React.FC = () => {
     }
   };
 
-  const isEventRegistered = (eventId: number) => {
-    return registrations.some(reg => reg.eventId === eventId.toString());
+  const isEventRegistered = (eventId: string) => {
+    return registrations.some(reg => reg.eventId === eventId);
   };
 
   const isProshowRegistered = (proshowId: string) => {
@@ -168,250 +169,272 @@ export const StudentDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen font-sans flex flex-col relative overflow-hidden">
-      {/* Dynamic Background Orbs */}
-      <div className="fixed top-[-10%] left-[-10%] w-96 h-96 bg-indigo-500/20 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
-      <div className="fixed bottom-[-10%] right-[-10%] w-96 h-96 bg-fuchsia-500/20 rounded-full blur-[100px] pointer-events-none mix-blend-multiply" />
+    <div className="min-h-screen bg-background fest-pattern font-sans flex relative overflow-hidden">
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-md z-40 md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
 
-      {/* Navigation Bar */}
-      <nav className="glass sticky top-0 z-40 px-6 py-4 border-b-0 border-white/50 shadow-sm">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-fuchsia-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+      {/* Sidebar */}
+      <aside className={cn(
+        "fixed md:sticky top-0 left-0 z-50 h-screen w-64 bg-[#080808] border-r border-white/5 flex flex-col transition-transform duration-300 md:translate-x-0 shadow-[4px_0_24px_rgba(0,0,0,0.5)] md:shadow-none",
+        isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+      )}>
+        {/* Logo Area */}
+        <div className="p-6 border-b border-white/5 flex items-center justify-between relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[50px] rounded-full pointer-events-none"></div>
+          <div className="flex items-center gap-3 relative z-10">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-[#A67C00] rounded-xl flex items-center justify-center text-background shadow-[0_0_15px_rgba(212,175,55,0.4)]">
               <GraduationCap size={20} />
             </div>
-            <div className="hidden sm:block">
-              <h1 className="text-lg font-bold text-slate-800 leading-tight">CCMS Student</h1>
-              <p className="text-indigo-500 text-[10px] uppercase tracking-widest font-bold">Cultural Carnival</p>
+            <div>
+              <h1 className="text-xl font-bold font-serif text-text-primary leading-none tracking-wider text-gradient-gold">C C M S</h1>
+              <p className="text-primary/70 text-[10px] uppercase tracking-[0.2em] font-bold mt-1">Student Portal</p>
             </div>
           </div>
+          <button className="md:hidden text-text-secondary" onClick={() => setIsMobileMenuOpen(false)}>
+            <X size={20} />
+          </button>
+        </div>
 
-          <div className="flex items-center bg-white/40 backdrop-blur-md p-1 rounded-2xl border border-white/60 shadow-inner">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id as Tab)}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300",
-                  activeTab === item.id 
-                    ? "bg-white text-indigo-700 shadow-md scale-105" 
-                    : "text-slate-500 hover:text-indigo-600 hover:bg-white/50"
-                )}
-              >
-                <item.icon size={16} />
-                <span className="hidden md:block">{item.label}</span>
-              </button>
-            ))}
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-1">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => {
+                setActiveTab(item.id as Tab);
+                setIsMobileMenuOpen(false);
+              }}
+              className={cn(
+                "w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-sm transition-all duration-300 relative group overflow-hidden font-medium",
+                activeTab === item.id 
+                  ? "text-primary bg-primary/10" 
+                  : "text-text-secondary hover:text-white"
+              )}
+            >
+              {activeTab === item.id && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[0_0_10px_rgba(212,175,55,0.8)] rounded-r-md"></div>
+              )}
+              <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              <item.icon size={18} className={cn("relative z-10 transition-colors", activeTab === item.id ? "text-primary" : "text-text-secondary group-hover:text-primary-light")} />
+              {item.label}
+            </button>
+          ))}
+        </nav>
+
+        {/* Bottom Profile Area */}
+        <div className="p-4 border-t border-white/5 bg-[#080808]">
+          <div className="flex items-center gap-3 mb-4 px-2">
+            <div className="w-10 h-10 rounded-full border border-primary/30 bg-primary/10 flex items-center justify-center text-primary font-bold shadow-inner">
+              {user?.name?.charAt(0) || 'S'}
+            </div>
+            <div className="flex-1 overflow-hidden cursor-pointer" onClick={() => navigate('/profile')}>
+              <p className="text-sm font-bold text-text-primary truncate hover:text-primary transition-colors">{user?.name}</p>
+              <p className="text-xs text-text-secondary truncate">{user?.email}</p>
+            </div>
+          </div>
+          <button 
+            onClick={logout}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-accent hover:bg-accent/10 border border-transparent hover:border-accent/20 transition-all"
+          >
+            <LogOut size={16} />
+            Sign Out
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-h-screen w-full md:w-[calc(100%-16rem)]">
+        {/* Top Navbar */}
+        <header className="h-16 bg-[#050505]/80 backdrop-blur-xl sticky top-0 z-30 px-4 sm:px-8 border-b border-white/5 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button 
+              className="md:hidden text-text-primary p-2 -ml-2 rounded-lg hover:bg-white/5"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
+              <Menu size={20} />
+            </button>
+            <h2 className="text-2xl font-bold font-serif text-text-primary capitalize hidden sm:block tracking-wide">
+              {activeTab}
+            </h2>
           </div>
 
           <div className="flex items-center gap-4">
-            <button 
-              onClick={() => navigate('/profile')}
-              className="hidden lg:flex flex-col items-end mr-2 text-right hover:opacity-80 transition-opacity"
-            >
-              <p className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                {user?.name}
-                <User size={14} className="text-indigo-500" />
-              </p>
-              <p className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider">{user?.role}</p>
+            <div className="relative hidden md:block">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={16} />
+              <input 
+                type="text" 
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-[#0a0a0a] border border-white/10 rounded-full py-1.5 pl-10 pr-4 text-sm outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 w-64 transition-all text-white placeholder:text-text-secondary/50"
+              />
+            </div>
+            <button className="p-2 text-text-secondary hover:text-secondary transition-colors relative">
+              <Bell size={20} />
+              <span className="absolute top-1.5 right-2 w-2 h-2 bg-accent rounded-full"></span>
             </button>
-            <Button variant="secondary" onClick={logout} className="p-2 sm:px-4 sm:py-2 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-100">
-              <LogOut size={18} />
-              <span className="hidden sm:inline ml-2">Sign Out</span>
-            </Button>
           </div>
-        </div>
-      </nav>
+        </header>
 
-      <main className="flex-grow p-6 sm:p-10">
-        <div className="max-w-7xl mx-auto">
-          <AnimatePresence mode="wait">
-            {activeTab === 'events' && (
-              <motion.div
-                key="events"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
-              >
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                  <div>
-                    <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-800 to-fuchsia-800 tracking-tight drop-shadow-sm pb-1">Upcoming Events</h2>
-                    <p className="text-slate-500 mt-2 font-medium">Explore and register for exciting cultural activities.</p>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-400" size={18} />
-                      <input 
-                        type="text" 
-                        placeholder="Search events..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="bg-white/60 backdrop-blur-sm border border-white rounded-2xl py-2.5 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white transition-all w-full md:w-64 shadow-sm"
-                      />
+        {/* Dynamic Content */}
+        <main className="flex-1 p-4 sm:p-8 overflow-y-auto">
+          <div className="max-w-6xl mx-auto pb-20">
+            <AnimatePresence mode="wait">
+              {activeTab === 'events' && (
+                <motion.div
+                  key="events"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-6"
+                >
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+                    <div>
+                      <h2 className="text-4xl font-bold font-serif text-text-primary tracking-wide text-gradient-gold">UPCOMING EVENTS</h2>
+                      <p className="text-sm text-text-secondary mt-2 font-light">Explore and register for exciting cultural activities.</p>
                     </div>
-                    <Button variant="secondary" className="p-2.5 rounded-2xl">
-                      <Filter size={18} />
-                    </Button>
-                  </div>
-                </div>
-
-                {isLoading ? (
-                  <div className="flex flex-col items-center justify-center py-20 text-zinc-400">
-                    <Loader2 className="animate-spin mb-4" size={32} />
-                    <p className="text-sm font-medium">Fetching latest events...</p>
-                  </div>
-                ) : filteredEvents.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredEvents.map((event) => (
-                      <EventCard 
-                        key={event.id} 
-                        event={event} 
-                        isRegistered={isEventRegistered(event.id)}
-                        onRegister={handleRegister}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="glass rounded-[2rem] py-20 flex flex-col items-center justify-center text-center px-6">
-                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-fuchsia-50 rounded-2xl flex items-center justify-center text-indigo-300 mb-4 shadow-inner border border-white">
-                      <Calendar size={32} />
+                    <div className="flex gap-3 w-full sm:w-auto">
+                      <div className="relative flex-1 sm:hidden">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={16} />
+                        <input 
+                          type="text" 
+                          placeholder="Search events..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="w-full bg-[#0a0a0a] border border-white/10 rounded-lg py-2 pl-9 pr-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary text-white"
+                        />
+                      </div>
+                      <Button variant="secondary" className="rounded-lg p-2.5">
+                        <Filter size={18} />
+                      </Button>
                     </div>
-                    <h3 className="text-lg font-bold text-slate-800">No events found</h3>
-                    <p className="text-slate-500 text-sm mt-1 max-w-xs">
-                      We couldn't find any events matching your search or there are no upcoming events.
-                    </p>
                   </div>
-                )}
-              </motion.div>
-            )}
 
-            {activeTab === 'announcements' && (
-              <motion.div
-                key="announcements"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
-              >
-                <div>
-                  <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-800 to-fuchsia-800 tracking-tight drop-shadow-sm pb-1">Announcements</h2>
-                  <p className="text-slate-500 mt-2 font-medium">Stay updated with the latest news and broadcasts.</p>
-                </div>
-
-                {isLoading ? (
-                  <div className="flex flex-col items-center justify-center py-20 text-zinc-400">
-                    <Loader2 className="animate-spin mb-4" size={32} />
-                    <p className="text-sm font-medium">Fetching announcements...</p>
-                  </div>
-                ) : announcements.length > 0 ? (
-                  <div className="flex flex-col gap-6 max-w-4xl">
-                    {announcements.map((announcement) => (
-                      <AnnouncementCard key={announcement.id} announcement={announcement} />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="glass rounded-[2rem] py-20 flex flex-col items-center justify-center text-center px-6">
-                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-fuchsia-50 rounded-2xl flex items-center justify-center text-indigo-300 mb-4 shadow-inner border border-white">
-                      <Megaphone size={32} />
+                  {isLoading ? (
+                    <div className="flex justify-center py-20 text-text-secondary">
+                      <Loader2 className="animate-spin" size={32} />
                     </div>
-                    <h3 className="text-lg font-bold text-slate-800">No announcements yet</h3>
-                    <p className="text-slate-500 text-sm mt-1 max-w-xs">
-                      Check back later for important updates from the carnival committee.
-                    </p>
-                  </div>
-                )}
-              </motion.div>
-            )}
-
-            {activeTab === 'proshow' && (
-              <motion.div
-                key="proshow"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
-              >
-                <div>
-                  <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-800 to-fuchsia-800 tracking-tight drop-shadow-sm pb-1">Pro-Shows</h2>
-                  <p className="text-slate-500 mt-2 font-medium">Get your passes for the biggest performances of the carnival.</p>
-                </div>
-
-                {isLoading ? (
-                  <div className="flex flex-col items-center justify-center py-20 text-zinc-400">
-                    <Loader2 className="animate-spin mb-4" size={32} />
-                    <p className="text-sm font-medium">Fetching pro-shows...</p>
-                  </div>
-                ) : proshows.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {proshows.map((proshow) => (
-                      <ProshowCard 
-                        key={proshow.id} 
-                        proshow={proshow} 
-                        isRegistered={isProshowRegistered(proshow.id)}
-                        onRegister={handleProshowRegister}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="glass rounded-[2rem] py-20 flex flex-col items-center justify-center text-center px-6">
-                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-50 to-fuchsia-50 rounded-2xl flex items-center justify-center text-indigo-300 mb-4 shadow-inner border border-white">
-                      <Ticket size={32} />
+                  ) : filteredEvents.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                      {filteredEvents.map((event) => (
+                        <EventCard 
+                          key={event.id} 
+                          event={event} 
+                          isRegistered={isEventRegistered(event.id)}
+                          onRegister={handleRegister}
+                        />
+                      ))}
                     </div>
-                    <h3 className="text-lg font-bold text-slate-800">No pro-shows listed</h3>
-                    <p className="text-slate-500 text-sm mt-1 max-w-xs">
-                      Check back later for exciting pro-show announcements.
-                    </p>
+                  ) : (
+                    <div className="glass-panel py-20 text-center">
+                      <Calendar size={48} className="mx-auto text-border-soft mb-4" />
+                      <h3 className="text-lg font-bold text-text-primary">No events found</h3>
+                      <p className="text-text-secondary mt-1">Check back later for new events.</p>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {activeTab === 'announcements' && (
+                <motion.div
+                  key="announcements"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-6"
+                >
+                  <div className="mb-8">
+                    <h2 className="text-4xl font-bold font-serif text-text-primary tracking-wide">ANNOUNCEMENTS</h2>
+                    <p className="text-sm text-text-secondary mt-2 font-light">Stay updated with the latest news.</p>
                   </div>
-                )}
-              </motion.div>
-            )}
 
-            {activeTab === 'schedule' && (
-              <motion.div
-                key="schedule"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-8"
-              >
-                <div>
-                  <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-800 to-fuchsia-800 tracking-tight drop-shadow-sm pb-1">Your Schedule</h2>
-                  <p className="text-slate-500 mt-2 font-medium">A chronological timeline of all carnival events and pro-shows.</p>
-                </div>
+                  {isLoading ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-text-secondary">
+                      <Loader2 className="animate-spin mb-4" size={32} />
+                    </div>
+                  ) : announcements.length > 0 ? (
+                    <div className="space-y-4 max-w-3xl">
+                      {announcements.map((announcement) => (
+                        <AnnouncementCard key={announcement.id} announcement={announcement} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="glass-panel py-20 text-center max-w-3xl">
+                      <Megaphone size={48} className="mx-auto text-border-soft mb-4" />
+                      <h3 className="text-lg font-bold text-text-primary">No announcements</h3>
+                    </div>
+                  )}
+                </motion.div>
+              )}
 
-                {isLoading ? (
-                  <div className="flex flex-col items-center justify-center py-20 text-zinc-400">
-                    <Loader2 className="animate-spin mb-4" size={32} />
-                    <p className="text-sm font-medium">Fetching schedule...</p>
+              {activeTab === 'proshow' && (
+                <motion.div
+                  key="proshow"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-6"
+                >
+                  <div className="mb-8">
+                    <h2 className="text-4xl font-bold font-serif text-text-primary tracking-wide text-gradient-gold">PRO-SHOWS</h2>
+                    <p className="text-sm text-text-secondary mt-2 font-light">Get your passes for the biggest performances.</p>
                   </div>
-                ) : (
-                  <ScheduleTimeline items={timelineItems} />
-                )}
-              </motion.div>
-            )}
 
-            {activeTab !== 'events' && activeTab !== 'announcements' && activeTab !== 'proshow' && activeTab !== 'schedule' && (
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="bg-white border border-dashed border-zinc-300 rounded-[2rem] py-40 flex flex-col items-center justify-center text-center"
-              >
-                <div className="w-16 h-16 bg-zinc-50 rounded-2xl flex items-center justify-center text-zinc-300 mb-4">
-                  <LayoutDashboard size={32} />
-                </div>
-                <h3 className="text-lg font-bold text-zinc-900 uppercase tracking-widest">
-                  {activeTab} Module
-                </h3>
-                <p className="text-zinc-500 text-sm mt-2">This feature is coming soon to the CCMS portal.</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </main>
+                  {isLoading ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-text-secondary">
+                      <Loader2 className="animate-spin mb-4" size={32} />
+                    </div>
+                  ) : proshows.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {proshows.map((proshow) => (
+                        <ProshowCard 
+                          key={proshow.id} 
+                          proshow={proshow} 
+                          isRegistered={isProshowRegistered(proshow.id)}
+                          onRegister={handleProshowRegister}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="glass-panel py-20 text-center">
+                      <Ticket size={48} className="mx-auto text-border-soft mb-4" />
+                      <h3 className="text-lg font-bold text-text-primary">No pro-shows listed</h3>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {activeTab === 'schedule' && (
+                <motion.div
+                  key="schedule"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-6 max-w-3xl mx-auto"
+                >
+                  <div className="mb-8">
+                    <h2 className="text-4xl font-bold font-serif text-text-primary tracking-wide">YOUR TIMELINE</h2>
+                    <p className="text-text-secondary mt-2 font-light">A chronological timeline of registered events.</p>
+                  </div>
+
+                  {isLoading ? (
+                    <div className="flex flex-col items-center justify-center py-20 text-text-secondary">
+                      <Loader2 className="animate-spin mb-4" size={32} />
+                    </div>
+                  ) : (
+                    <ScheduleTimeline items={timelineItems} />
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </main>
+      </div>
     </div>
   );
 };

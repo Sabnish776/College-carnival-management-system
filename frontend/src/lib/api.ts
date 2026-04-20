@@ -11,12 +11,12 @@ export const api = {
         })
       },
     });
-    
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'An error occurred' }));
       throw new Error(errorData.message || `Request failed with status ${response.status}`);
     }
-    
+
     return response.json();
   },
 
@@ -31,12 +31,12 @@ export const api = {
       },
       body: JSON.stringify(data),
     });
-    
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'An error occurred' }));
       throw new Error(errorData.message || `Request failed with status ${response.status}`);
     }
-    
+
     return response.json();
   },
 
@@ -51,12 +51,12 @@ export const api = {
       },
       body: JSON.stringify(data),
     });
-    
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'An error occurred' }));
       throw new Error(errorData.message || `Request failed with status ${response.status}`);
     }
-    
+
     return response.json();
   },
 
@@ -70,12 +70,12 @@ export const api = {
         })
       },
     });
-    
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ message: 'An error occurred' }));
       throw new Error(errorData.message || `Request failed with status ${response.status}`);
     }
-    
+
     return response.json();
   }
 };
