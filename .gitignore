@@ -5,8 +5,8 @@ target/
 !**/src/test/**/target/
 /backend/target/
 /backend/*.log
-/backend/.mvn/
-/backend/mvnw
+# /backend/.mvn/
+# /backend/mvnw
 /backend/mvnw.cmd
 ### STS ###
 .apt_generated
