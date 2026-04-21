@@ -129,7 +129,7 @@ export const StudentDashboard: React.FC = () => {
     return proshowRegistrations.some(reg => reg.proshowId === proshowId);
   };
 
-  const filteredEvents = events.filter(event => 
+  const filteredEvents = events.filter(event =>
     event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     event.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -172,7 +172,7 @@ export const StudentDashboard: React.FC = () => {
     <div className="min-h-screen bg-background fest-pattern font-sans flex relative overflow-hidden">
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/60 backdrop-blur-md z-40 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
@@ -211,8 +211,8 @@ export const StudentDashboard: React.FC = () => {
               }}
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-sm transition-all duration-300 relative group overflow-hidden font-medium",
-                activeTab === item.id 
-                  ? "text-primary bg-primary/10" 
+                activeTab === item.id
+                  ? "text-primary bg-primary/10"
                   : "text-text-secondary hover:text-white"
               )}
             >
@@ -237,7 +237,7 @@ export const StudentDashboard: React.FC = () => {
               <p className="text-xs text-text-secondary truncate">{user?.email}</p>
             </div>
           </div>
-          <button 
+          <button
             onClick={logout}
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-accent hover:bg-accent/10 border border-transparent hover:border-accent/20 transition-all"
           >
@@ -252,7 +252,7 @@ export const StudentDashboard: React.FC = () => {
         {/* Top Navbar */}
         <header className="h-16 bg-[#050505]/80 backdrop-blur-xl sticky top-0 z-30 px-4 sm:px-8 border-b border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button 
+            <button
               className="md:hidden text-text-primary p-2 -ml-2 rounded-lg hover:bg-white/5"
               onClick={() => setIsMobileMenuOpen(true)}
             >
@@ -266,15 +266,18 @@ export const StudentDashboard: React.FC = () => {
           <div className="flex items-center gap-4">
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={16} />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="bg-[#0a0a0a] border border-white/10 rounded-full py-1.5 pl-10 pr-4 text-sm outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/50 w-64 transition-all text-white placeholder:text-text-secondary/50"
               />
             </div>
-            <button className="p-2 text-text-secondary hover:text-secondary transition-colors relative">
+            <button 
+              onClick={() => setActiveTab('announcements')}
+              className="p-2 text-text-secondary hover:text-secondary transition-colors relative"
+            >
               <Bell size={20} />
               <span className="absolute top-1.5 right-2 w-2 h-2 bg-accent rounded-full"></span>
             </button>
@@ -301,8 +304,8 @@ export const StudentDashboard: React.FC = () => {
                     <div className="flex gap-3 w-full sm:w-auto">
                       <div className="relative flex-1 sm:hidden">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={16} />
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           placeholder="Search events..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
@@ -322,9 +325,9 @@ export const StudentDashboard: React.FC = () => {
                   ) : filteredEvents.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                       {filteredEvents.map((event) => (
-                        <EventCard 
-                          key={event.id} 
-                          event={event} 
+                        <EventCard
+                          key={event.id}
+                          event={event}
                           isRegistered={isEventRegistered(event.id)}
                           onRegister={handleRegister}
                         />
@@ -392,9 +395,9 @@ export const StudentDashboard: React.FC = () => {
                   ) : proshows.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {proshows.map((proshow) => (
-                        <ProshowCard 
-                          key={proshow.id} 
-                          proshow={proshow} 
+                        <ProshowCard
+                          key={proshow.id}
+                          proshow={proshow}
                           isRegistered={isProshowRegistered(proshow.id)}
                           onRegister={handleProshowRegister}
                         />
