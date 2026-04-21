@@ -49,32 +49,33 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
       <motion.div
         layoutId={`proshow-card-${proshow.id}`}
         onClick={() => setIsOpen(true)}
-        className="glass-dark text-white p-6 rounded-3xl cursor-pointer group flex flex-col h-full relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-fuchsia-500/20 hover:-translate-y-1"
+        className="glass-card text-white p-7 rounded-sm cursor-pointer group flex flex-col h-full relative overflow-hidden transition-all duration-500 hover:shadow-[0_0_30px_rgba(109,40,217,0.3)] hover:-translate-y-2 ring-1 ring-white/5 hover:ring-secondary/50"
       >
-        <div className="absolute top-0 right-0 w-32 h-32 bg-fuchsia-500/20 rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-125" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-secondary/20 via-background to-background opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/10 blur-xl rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-150 group-hover:bg-secondary/20" />
         
-        <div className="flex justify-between items-start mb-4 relative z-10">
-          <span className="px-3 py-1 bg-gradient-to-r from-fuchsia-600/80 to-purple-600/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-full flex items-center gap-1 border border-white/20">
+        <div className="flex justify-between items-start mb-6 relative z-10">
+          <span className="px-3 py-1 bg-secondary/20 backdrop-blur-md text-secondary text-[10px] font-bold uppercase tracking-[0.2em] rounded-sm flex items-center gap-2 border border-secondary/30 shadow-[0_0_15px_rgba(109,40,217,0.3)]">
             <Mic2 size={12} />
             PRO-SHOW
           </span>
           {proshow.ticketPrice > 0 ? (
-            <span className="text-emerald-400 font-bold text-sm bg-emerald-400/10 px-2 py-1 rounded-lg border border-emerald-400/20">₹{proshow.ticketPrice}</span>
+            <span className="text-primary font-bold text-sm bg-primary/10 px-3 py-1 rounded-sm border border-primary/20">₹{proshow.ticketPrice}</span>
           ) : (
-            <span className="text-fuchsia-300 font-bold text-sm bg-fuchsia-900/40 px-2 py-1 rounded-lg border border-fuchsia-500/20">FREE</span>
+            <span className="text-secondary font-bold text-sm bg-secondary/10 px-3 py-1 rounded-sm border border-secondary/20">FREE</span>
           )}
         </div>
         
-        <h3 className="text-xl font-bold text-white mb-1 line-clamp-1 relative z-10 group-hover:text-fuchsia-300 transition-colors">{proshow.title}</h3>
-        <p className="text-fuchsia-200 font-medium text-sm mb-4 relative z-10">feat. {proshow.artist}</p>
+        <h3 className="text-3xl font-bold font-serif text-white mb-1 line-clamp-1 relative z-10 group-hover:text-secondary transition-colors duration-300 leading-none">{proshow.title}</h3>
+        <p className="text-primary/90 font-medium text-sm mb-6 relative z-10 tracking-wider uppercase">feat. {proshow.artist}</p>
         
-        <div className="space-y-3 pt-4 border-t border-zinc-800/50 flex-grow">
+        <div className="space-y-3 pt-4 border-t border-zinc-700/50 flex-grow">
           <div className="flex items-center gap-3 text-zinc-400 text-xs">
-            <Clock size={16} className="text-zinc-500" />
+            <Clock size={16} className="text-primary-light" />
             <span>{formatDate(proshow.dateTime)}</span>
           </div>
           <div className="flex items-center gap-3 text-zinc-400 text-xs">
-            <MapPin size={16} className="text-zinc-500" />
+            <MapPin size={16} className="text-secondary" />
             <span className="line-clamp-1">{proshow.venue}</span>
           </div>
         </div>
@@ -83,7 +84,7 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
           <div className="flex gap-2 mt-6 pt-4 border-t border-zinc-800" onClick={(e) => e.stopPropagation()}>
             <Button 
               variant="secondary" 
-              className="flex-1 py-2 text-xs bg-zinc-800 hover:bg-zinc-700 text-white border-none" 
+              className="flex-1 py-2 text-xs bg-zinc-800 hover:bg-zinc-700 text-white border-zinc-700 hover:text-white" 
               onClick={() => onEdit?.(proshow)}
             >
               Edit
@@ -130,14 +131,15 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
                 <X size={20} />
               </button>
 
-              <div className="w-full md:w-2/5 bg-gradient-to-br from-fuchsia-900 to-indigo-900 p-8 text-white flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
+              <div className="w-full md:w-2/5 bg-[#080808] p-8 text-white flex flex-col justify-between relative overflow-hidden border-r border-white/10">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-secondary/30 via-transparent to-transparent opacity-60 mix-blend-screen"></div>
+                <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-secondary/20 blur-[60px] rounded-full mix-blend-screen"></div>
                 <div className="relative z-10">
-                  <span className="px-3 py-1 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-full border border-white/20 shadow-xl">
+                  <span className="px-3 py-1 bg-secondary/20 backdrop-blur-md text-secondary text-[10px] font-bold uppercase tracking-[0.2em] rounded-sm border border-secondary/30 shadow-xl">
                     Main Event
                   </span>
-                  <h2 className="text-3xl font-bold mt-6 leading-tight drop-shadow-md">{proshow.title}</h2>
-                  <p className="text-indigo-200 mt-2 font-medium flex items-center gap-2">
+                  <h2 className="text-5xl font-bold font-serif mt-6 leading-none drop-shadow-lg text-white">{proshow.title}</h2>
+                  <p className="text-primary mt-3 font-bold tracking-widest uppercase flex items-center gap-2">
                     <Mic2 size={16} /> {proshow.artist}
                   </p>
                 </div>
@@ -148,7 +150,7 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
                       <Calendar size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider text-indigo-200">Date & Time</p>
+                      <p className="text-[10px] uppercase tracking-wider text-primary-light">Date & Time</p>
                       <p className="text-sm font-medium drop-shadow-sm">{formatDate(proshow.dateTime)}</p>
                     </div>
                   </div>
@@ -157,17 +159,21 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
                       <MapPin size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider text-indigo-200">Venue</p>
+                      <p className="text-[10px] uppercase tracking-wider text-primary-light">Venue</p>
                       <p className="text-sm font-medium drop-shadow-sm">{proshow.venue}</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="w-full md:w-3/5 p-8 sm:p-10 flex flex-col bg-zinc-900/90 text-zinc-300 backdrop-blur-xl">
-                <div className="flex-grow">
-                  <h4 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-4">About the Show</h4>
-                  <p className="text-zinc-400 leading-relaxed whitespace-pre-wrap">
+              <div className="w-full md:w-3/5 p-8 sm:p-12 flex flex-col bg-[#050505] text-white backdrop-blur-xl relative">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] rounded-full mix-blend-screen pointer-events-none"></div>
+                <div className="flex-grow z-10">
+                  <h4 className="text-xs font-bold text-secondary uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                    <span className="w-8 h-px bg-secondary/50"></span>
+                    About the Show
+                  </h4>
+                  <p className="text-text-secondary/90 leading-relaxed font-light whitespace-pre-wrap">
                     {proshow.description}
                   </p>
                 </div>
@@ -175,7 +181,7 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
                 <div className="mt-8">
                   <div className="bg-zinc-800/50 rounded-2xl p-4 flex justify-between items-center mb-6 border border-zinc-700/50">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-secondary/10 text-secondary flex items-center justify-center">
                         <TicketIcon size={20} />
                       </div>
                       <div>
@@ -192,7 +198,7 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
                           "w-full py-4 text-base shadow-xl transition-all border-none text-white",
                           isRegistered 
                             ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-900/50 cursor-default" 
-                            : "bg-indigo-600 hover:bg-indigo-500 shadow-indigo-900/50"
+                            : "bg-primary hover:bg-primary-dark shadow-primary/50"
                         )}
                         onClick={handleRegister}
                         disabled={isRegistered || isRegistering}
@@ -203,13 +209,13 @@ export const ProshowCard: React.FC<ProshowCardProps> = ({ proshow, isAdmin, isRe
                     {isAdmin && (
                       <div className="flex gap-3">
                         <Button 
-                          className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white border-zinc-700" 
+                          className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white border-zinc-700 hover:text-white" 
                           onClick={() => { setIsOpen(false); onEdit?.(proshow); }}
                         >
                           Edit Details
                         </Button>
                         <Button 
-                          className="bg-rose-950/50 text-rose-400 hover:bg-rose-900/50 hover:text-rose-300 border-rose-900/50" 
+                          className="bg-rose-950/50 text-rose-400 hover:bg-rose-900/50 hover:text-rose-300 border-transparent hover:border-transparent" 
                           onClick={() => { setIsOpen(false); onDelete?.(proshow.id); }}
                         >
                           Delete Show

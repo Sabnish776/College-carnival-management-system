@@ -10,8 +10,8 @@ interface EventCardProps {
   isAdmin?: boolean;
   isRegistered?: boolean;
   onEdit?: (event: Event) => void;
-  onDelete?: (id: number) => void;
-  onRegister?: (id: number) => Promise<void>;
+  onDelete?: (id: string) => void;
+  onRegister?: (id: string) => Promise<void>;
 }
 
 export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, isRegistered, onEdit, onDelete, onRegister }) => {
@@ -49,34 +49,34 @@ export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, isRegister
       <motion.div
         layoutId={`card-${event.id}`}
         onClick={() => setIsOpen(true)}
-        className="glass p-5 rounded-3xl cursor-pointer group flex flex-col h-full transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-1 relative overflow-hidden"
+        className="glass-card p-6 cursor-pointer group flex flex-col h-full transition-all duration-500 hover:shadow-[0_0_30px_rgba(212,175,55,0.15)] hover:-translate-y-2 relative overflow-hidden ring-1 ring-white/5 hover:ring-primary/40"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-fuchsia-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        <div className="flex justify-between items-start mb-3 relative z-10">
-          <span className="px-3 py-1 bg-gradient-to-r from-indigo-100 to-fuchsia-100 text-indigo-700 text-[10px] font-bold uppercase tracking-widest rounded-full border border-indigo-200/50">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-background to-background opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="flex justify-between items-start mb-4 relative z-10">
+          <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.2em] rounded-sm border border-primary/20 backdrop-blur-md">
             {event.category}
           </span>
-          <div className="text-indigo-300 group-hover:text-fuchsia-500 transition-colors duration-300">
+          <div className="text-text-secondary group-hover:text-primary transition-colors duration-300">
             <Calendar size={18} />
           </div>
         </div>
         
-        <h3 className="text-lg font-bold text-zinc-900 mb-2 line-clamp-1 relative z-10 group-hover:text-indigo-900 transition-colors">{event.title}</h3>
-        <p className="text-zinc-600 text-sm line-clamp-2 mb-4 flex-grow relative z-10">{event.description}</p>
+        <h3 className="text-2xl font-bold font-serif text-text-primary mb-2 line-clamp-1 relative z-10 group-hover:text-primary transition-colors duration-300">{event.title}</h3>
+        <p className="text-text-secondary text-sm line-clamp-2 mb-6 flex-grow relative z-10 font-light">{event.description}</p>
         
-        <div className="space-y-2 pt-4 border-t border-indigo-100/50 relative z-10">
-          <div className="flex items-center gap-2 text-indigo-900/60 text-xs font-medium">
-            <Clock size={14} className="text-indigo-400" />
-            <span>{formatDate(event.eventDateTime)}</span>
+        <div className="space-y-3 pt-4 border-t border-border-soft relative z-10">
+          <div className="flex items-center gap-3 text-text-secondary text-xs font-medium">
+            <Clock size={16} className="text-primary group-hover:text-primary-light transition-colors" />
+            <span className="tracking-wide">{formatDate(event.eventDateTime)}</span>
           </div>
-          <div className="flex items-center gap-2 text-indigo-900/60 text-xs font-medium">
-            <MapPin size={14} className="text-fuchsia-400" />
-            <span className="line-clamp-1">{event.venue}</span>
+          <div className="flex items-center gap-3 text-text-secondary text-xs font-medium">
+            <MapPin size={16} className="text-secondary group-hover:text-primary-light transition-colors" />
+            <span className="line-clamp-1 tracking-wide">{event.venue}</span>
           </div>
         </div>
 
         {isAdmin && (
-          <div className="flex gap-2 mt-4 pt-4 border-t border-zinc-50" onClick={(e) => e.stopPropagation()}>
+          <div className="flex gap-2 mt-4 pt-4 border-t border-border-soft" onClick={(e) => e.stopPropagation()}>
             <Button 
               variant="secondary" 
               className="flex-1 py-2 text-xs" 
@@ -108,72 +108,77 @@ export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, isRegister
             
             <motion.div 
               layoutId={`card-${event.id}`}
-              className="relative w-full max-w-3xl glass-dark rounded-[2rem] overflow-hidden flex flex-col md:flex-row"
+              className="relative w-full max-w-4xl glass-dark border border-white/10 shadow-2xl rounded-sm overflow-hidden flex flex-col md:flex-row bg-[#050505]"
             >
               <button 
                 onClick={() => setIsOpen(false)}
-                className="absolute top-6 right-6 z-20 p-2 bg-white/10 hover:bg-white/20 rounded-full text-white/70 transition-colors backdrop-blur-md"
+                className="absolute top-6 right-6 z-20 p-2 bg-text-primary/10 hover:bg-text-primary/20 rounded-full text-text-primary/70 transition-colors backdrop-blur-md"
               >
                 <X size={20} />
               </button>
 
-              <div className="w-full md:w-2/5 bg-gradient-to-br from-indigo-900 to-fuchsia-900 p-8 text-white flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+              <div className="w-full md:w-2/5 bg-gradient-to-br from-[#111111] to-[#050505] p-8 text-white flex flex-col justify-between relative overflow-hidden border-r border-white/10">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent opacity-50 mix-blend-screen"></div>
+                <div className="absolute -left-10 -top-10 w-40 h-40 bg-primary/20 blur-[50px] rounded-full mix-blend-screen"></div>
                 <div className="relative z-10">
-                  <span className="px-3 py-1 bg-white/10 text-white text-[10px] font-bold uppercase tracking-widest rounded-full border border-white/20">
+                  <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-[0.2em] rounded-sm border border-primary/30 shadow-[0_0_10px_rgba(212,175,55,0.2)]">
                     {event.category}
                   </span>
-                  <h2 className="text-3xl font-bold mt-4 leading-tight">{event.title}</h2>
+                  <h2 className="text-4xl font-bold font-serif mt-6 leading-none text-gradient-gold text-shadow-sm pb-2">{event.title}</h2>
                 </div>
                 
-                <div className="space-y-4 mt-8 relative z-10">
-                  <div className="flex items-center gap-3 text-indigo-100">
-                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/10">
+                <div className="space-y-6 mt-12 relative z-10">
+                  <div className="flex items-center gap-4 text-text-primary">
+                    <div className="w-12 h-12 rounded-lg bg-surface flex items-center justify-center border border-white/5 text-primary shadow-inner">
                       <Calendar size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider opacity-60">Date & Time</p>
-                      <p className="text-sm font-medium">{formatDate(event.eventDateTime)}</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-primary/70 font-bold mb-1">Date & Time</p>
+                      <p className="text-sm font-medium tracking-wide text-white/90">{formatDate(event.eventDateTime)}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-indigo-100">
-                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/10">
+                  <div className="flex items-center gap-4 text-text-primary">
+                    <div className="w-12 h-12 rounded-lg bg-surface flex items-center justify-center border border-white/5 text-secondary shadow-inner">
                       <MapPin size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider opacity-60">Venue</p>
-                      <p className="text-sm font-medium">{event.venue}</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-secondary/70 font-bold mb-1">Venue</p>
+                      <p className="text-sm font-medium tracking-wide text-white/90">{event.venue}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-indigo-100">
-                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center backdrop-blur-sm border border-white/10">
+                  <div className="flex items-center gap-4 text-text-primary">
+                    <div className="w-12 h-12 rounded-lg bg-surface flex items-center justify-center border border-white/5 text-accent shadow-inner">
                       <Users size={20} />
                     </div>
                     <div>
-                      <p className="text-[10px] uppercase tracking-wider opacity-60">Capacity</p>
-                      <p className="text-sm font-medium">{event.maxParticipants} Participants</p>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-accent/70 font-bold mb-1">Capacity</p>
+                      <p className="text-sm font-medium tracking-wide text-white/90">{event.maxParticipants} Participants</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="w-full md:w-3/5 p-8 sm:p-10 flex flex-col bg-white/90 backdrop-blur-xl">
-                <div className="flex-grow">
-                  <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-4">About Event</h4>
-                  <p className="text-slate-600 leading-relaxed whitespace-pre-wrap">
+              <div className="w-full md:w-3/5 p-8 sm:p-12 flex flex-col bg-[#050505] relative">
+                <div className="absolute bottom-0 right-0 w-64 h-64 bg-secondary/10 blur-[80px] rounded-full mix-blend-screen pointer-events-none"></div>
+                <div className="flex-grow z-10">
+                  <h4 className="text-xs font-bold text-primary uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+                    <span className="w-8 h-px bg-primary/50"></span>
+                    About Event
+                  </h4>
+                  <p className="text-text-secondary/90 leading-relaxed whitespace-pre-wrap font-light text-sm text-justify">
                     {event.description}
                   </p>
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-slate-100 flex flex-col gap-3">
+                <div className="mt-10 pt-8 border-t border-white/10 flex flex-col gap-4 z-10">
                   {!isAdmin && (
                     <>
                       <Button 
                         className={cn(
                           "flex-1 py-4 text-base shadow-lg transition-all",
                           isRegistered 
-                            ? "bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20" 
-                            : "shadow-zinc-900/20"
+                            ? "bg-emerald-900 border-emerald-500/50 text-emerald-400 hover:brightness-100 cursor-default" 
+                            : ""
                         )}
                         onClick={handleRegister}
                         disabled={isRegistered || isRegistering}
@@ -181,7 +186,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, isRegister
                         {isRegistering ? 'Registering...' : isRegistered ? 'Registered' : 'Register Now'}
                       </Button>
                       {!isRegistered && (
-                        <p className="text-[10px] text-zinc-400 text-center font-medium uppercase tracking-wider">
+                        <p className="text-[10px] text-text-secondary text-center font-bold uppercase tracking-wider">
                           Notice: Registration cannot be cancelled after confirmation
                         </p>
                       )}
@@ -192,7 +197,7 @@ export const EventCard: React.FC<EventCardProps> = ({ event, isAdmin, isRegister
                       <Button variant="secondary" className="flex-1" onClick={() => { setIsOpen(false); onEdit?.(event); }}>
                         Edit Details
                       </Button>
-                      <Button variant="ghost" className="text-rose-600" onClick={() => { setIsOpen(false); onDelete?.(event.id); }}>
+                      <Button variant="ghost" className="text-rose-600 border border-transparent" onClick={() => { setIsOpen(false); onDelete?.(event.id); }}>
                         Delete
                       </Button>
                     </>

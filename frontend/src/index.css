@@ -1,32 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #D4AF37; /* Metallic Gold */
+  --color-primary-light: #F3E5AB;
+  --color-primary-dark: #A67C00;
+  --color-secondary: #6D28D9; /* Rich Purple */
+  --color-accent: #FF5E5E; /* Crimson/Coral */
+  --color-background: #050505; /* Deep Black */
+  --color-surface: #111111; /* Charcoal Surface */
+  --color-surface-light: #1A1A1A;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #9CA3AF;
+  --color-border-soft: #333333;
+  --color-border-glow: #D4AF3780;
+
+  --font-serif: "Bebas Neue", sans-serif; /* Condensed Headers */
+  --font-sans: "Outfit", sans-serif;
+}
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-indigo-50 via-white to-fuchsia-50 min-h-screen text-slate-900 bg-fixed selection:bg-indigo-200 selection:text-indigo-900;
+    @apply bg-background min-h-screen text-text-primary bg-fixed font-sans antialiased selection:bg-secondary selection:text-white overflow-x-hidden;
+    /* Adding a subtle starfield/noise background effect */
+    background-image: radial-gradient(circle at 50% 0%, #1a103c 0%, transparent 50%),
+                      radial-gradient(circle at 0% 50%, #20150a 0%, transparent 40%);
   }
 }
 
-/* Custom scrollbar to make it look premium */
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-serif);
+  letter-spacing: 0.05em;
+}
+
+/* Custom premium scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--color-background);
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-indigo-200 rounded-full hover:bg-indigo-300 transition-colors;
+  @apply bg-surface-light rounded-full hover:bg-primary/50 transition-colors border border-background;
 }
 
 /* Custom utilities */
 @layer utilities {
   .glass {
-    @apply bg-white/60 backdrop-blur-xl border border-white/60 shadow-xl shadow-indigo-900/5;
+    @apply bg-surface/60 backdrop-blur-xl border border-white/5 shadow-2xl;
   }
   .glass-dark {
-    @apply bg-zinc-900/80 backdrop-blur-xl border border-zinc-700/50 shadow-2xl shadow-black/40;
+    @apply bg-[#080808]/80 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.8)];
+  }
+  .glass-panel {
+    @apply bg-surface/50 backdrop-blur-md border border-white/10 shadow-lg rounded-2xl;
+  }
+  .glass-card {
+    @apply bg-gradient-to-b from-surface/80 to-[#0a0a0a]/90 backdrop-blur-xl border border-white/5 shadow-2xl rounded-2xl overflow-hidden;
   }
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-fuchsia-600;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent;
+  }
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#F3E5AB] to-[#D4AF37];
+  }
+  .glow-border {
+    position: relative;
+  }
+  .glow-border::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(to bottom right, var(--color-primary), var(--color-secondary), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+  }
+  .glow-border:hover::before {
+    opacity: 1;
+  }
+  .glow-text {
+    text-shadow: 0 0 20px var(--color-primary-dark);
+  }
+  .fest-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 }
