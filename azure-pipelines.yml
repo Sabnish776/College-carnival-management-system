@@ -18,6 +18,7 @@ stages:
             inputs:
               version: '22.x'
             displayName: Install Node.js
+
           - script: |
               cd frontend
               npm install
@@ -54,3 +55,47 @@ stages:
               PathtoPublish: 'backend/target'
               ArtifactName: 'backend-jar'
             displayName: Publish Backend Artifact
+
+  - stage: DeployBackend
+    displayName: Deploy Backend
+    dependsOn: Backend
+    jobs:
+      - job: DeploySpringBoot
+        displayName: Deploy to Azure App Service
+        steps:
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: current
+              artifactName: 'backend-jar'
+              downloadPath: '$(System.ArtifactsDirectory)'
+
+          - task: AzureWebApp@1
+            displayName: Deploy Backend to App Service
+            inputs:
+              azureSubscription: 'Azure for Students'
+              appType: webAppLinux
+              appName: 'college-carnival-backend'
+              package: '$(System.ArtifactsDirectory)/backend-jar/*.jar'
+              runtimeStack: 'JAVA|17-java17'
+
+  - stage: DeployFrontend
+    displayName: Deploy Frontend
+    dependsOn: DeployBackend
+    jobs:
+      - job: DeployReact
+        displayName: Deploy to Azure App Service
+        steps:
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: current
+              artifactName: 'frontend-dist'
+              downloadPath: '$(System.ArtifactsDirectory)'
+
+          - task: AzureWebApp@1
+            displayName: Deploy Frontend to App Service
+            inputs:
+              azureSubscription: 'Azure for Students'
+              appType: webAppLinux
+              appName: 'college-carnival-frontend'
+              package: '$(System.ArtifactsDirectory)/frontend-dist'
+              runtimeStack: 'NODE|22-lts'
