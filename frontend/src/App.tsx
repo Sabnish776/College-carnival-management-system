@@ -26,34 +26,34 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      <Route 
-        path="/auth" 
-        element={!isLoggedIn ? <AuthPage /> : <Navigate to={getDefaultPath()} replace />} 
+      <Route
+        path="/auth"
+        element={!isLoggedIn ? <AuthPage /> : <Navigate to={getDefaultPath()} replace />}
       />
-      
+
       {/* Protected Student Route */}
-      <Route 
-        path="/student" 
-        element={isLoggedIn && user?.role === 'STUDENT' ? <StudentDashboard /> : <Navigate to="/auth" replace />} 
+      <Route
+        path="/student"
+        element={isLoggedIn && user?.role === 'STUDENT' ? <StudentDashboard /> : <Navigate to="/auth" replace />}
       />
 
       {/* Protected Admin Route */}
-      <Route 
-        path="/admin" 
-        element={isLoggedIn && user?.role === 'ADMIN' ? <AdminDashboard /> : <Navigate to="/auth" replace />} 
+      <Route
+        path="/admin"
+        element={isLoggedIn && user?.role === 'ADMIN' ? <AdminDashboard /> : <Navigate to="/auth" replace />}
       />
 
       {/* Protected Profile Route */}
-      <Route 
-        path="/profile" 
-        element={isLoggedIn ? <ProfilePage /> : <Navigate to="/auth" replace />} 
+      <Route
+        path="/profile"
+        element={isLoggedIn ? <ProfilePage /> : <Navigate to="/auth" replace />}
       />
 
-      <Route 
-        path="/" 
-        element={<Navigate to={isLoggedIn ? getDefaultPath() : "/auth"} replace />} 
+      <Route
+        path="/"
+        element={<Navigate to={isLoggedIn ? getDefaultPath() : "/auth"} replace />}
       />
-      
+
       {/* Catch-all redirect */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

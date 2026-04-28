@@ -28,11 +28,13 @@ export const AdminDashboard: React.FC = () => {
   const [isProshowFormOpen, setIsProshowFormOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
   const [editingProshow, setEditingProshow] = useState<Proshow | null>(null);
+  const [stats, setStats] = useState({ totalRegistrations: 0, ticketsSold: 0 });
 
   useEffect(() => {
     fetchEvents();
     fetchProshows();
     fetchAnnouncements();
+    fetchStats();
   }, []);
 
   const fetchEvents = async () => {
@@ -67,6 +69,15 @@ export const AdminDashboard: React.FC = () => {
       setAnnouncements(data.announcements || []);
     } catch (error) {
       console.error('Failed to fetch announcements:', error);
+    }
+  };
+
+  const fetchStats = async () => {
+    try {
+      const data = await api.get('/api/admin/stats');
+      setStats(data);
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
     }
   };
 
@@ -161,7 +172,7 @@ export const AdminDashboard: React.FC = () => {
     }
   };
 
-  const filteredEvents = events.filter(event => 
+  const filteredEvents = events.filter(event =>
     event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     event.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -177,7 +188,7 @@ export const AdminDashboard: React.FC = () => {
     <div className="min-h-screen bg-background fest-pattern font-sans flex relative overflow-hidden">
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/60 backdrop-blur-md z-40 md:hidden"
           onClick={() => setIsMobileMenuOpen(false)}
         />
@@ -216,8 +227,8 @@ export const AdminDashboard: React.FC = () => {
               }}
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3.5 rounded-lg text-sm transition-all duration-300 relative group overflow-hidden font-medium",
-                activeTab === item.id 
-                  ? "text-secondary bg-secondary/10" 
+                activeTab === item.id
+                  ? "text-secondary bg-secondary/10"
                   : "text-text-secondary hover:text-white"
               )}
             >
@@ -242,7 +253,7 @@ export const AdminDashboard: React.FC = () => {
               <p className="text-xs text-text-secondary truncate">{user?.email}</p>
             </div>
           </div>
-          <button 
+          <button
             onClick={logout}
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-accent hover:bg-accent/10 border border-transparent hover:border-accent/20 transition-all"
           >
@@ -257,7 +268,7 @@ export const AdminDashboard: React.FC = () => {
         {/* Top Navbar */}
         <header className="h-16 bg-[#050505]/80 backdrop-blur-xl sticky top-0 z-30 px-4 sm:px-8 border-b border-white/5 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button 
+            <button
               className="md:hidden text-text-primary p-2 -ml-2 rounded-lg hover:bg-white/5"
               onClick={() => setIsMobileMenuOpen(true)}
             >
@@ -271,15 +282,18 @@ export const AdminDashboard: React.FC = () => {
           <div className="flex items-center gap-4">
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={16} />
-                <input 
-                  type="text" 
-                  placeholder="Search..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="bg-[#0a0a0a] border border-white/10 rounded-full py-1.5 pl-10 pr-4 text-sm outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 w-64 transition-all text-white"
-                />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-[#0a0a0a] border border-white/10 rounded-full py-1.5 pl-10 pr-4 text-sm outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 w-64 transition-all text-white"
+              />
             </div>
-            <button className="p-2 text-text-secondary hover:text-primary transition-colors relative">
+            <button 
+              onClick={() => setActiveTab('announcements')}
+              className="p-2 text-text-secondary hover:text-primary transition-colors relative"
+            >
               <Bell size={20} />
               <span className="absolute top-1.5 right-2 w-2 h-2 bg-accent rounded-full"></span>
             </button>
@@ -302,8 +316,8 @@ export const AdminDashboard: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                     {[
                       { label: 'Total Events', value: events.length.toString(), icon: Calendar, color: 'text-primary' },
-                      { label: 'Registrations', value: '1,284', icon: Users, color: 'text-emerald-600' },
-                      { label: 'Tickets Sold', value: '850', icon: BarChart3, color: 'text-secondary' },
+                      { label: 'Registrations', value: stats.totalRegistrations.toLocaleString(), icon: Users, color: 'text-emerald-600' },
+                      { label: 'Tickets Sold', value: stats.ticketsSold.toLocaleString(), icon: BarChart3, color: 'text-secondary' },
                       { label: 'System Status', value: 'Active', icon: Settings, color: 'text-accent' },
                     ].map((stat, i) => (
                       <div key={i} className="glass-card bg-[#050505] p-6 flex flex-col justify-between hover:shadow-[0_0_25px_rgba(255,255,255,0.05)] transition-shadow border border-white/5">
@@ -353,15 +367,15 @@ export const AdminDashboard: React.FC = () => {
                     <div className="flex gap-3 w-full sm:w-auto">
                       <div className="relative flex-1 sm:hidden">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary" size={16} />
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           placeholder="Search..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                           className="w-full bg-surface border border-border-soft rounded-lg py-2 pl-9 pr-4 text-sm"
                         />
                       </div>
-                      <Button 
+                      <Button
                         className="bg-primary hover:bg-primary-dark text-white rounded-lg px-4 py-2 shrink-0"
                         onClick={() => { setEditingEvent(null); setIsFormOpen(true); }}
                       >
@@ -378,9 +392,9 @@ export const AdminDashboard: React.FC = () => {
                   ) : filteredEvents.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                       {filteredEvents.map((event) => (
-                        <EventCard 
-                          key={event.id} 
-                          event={event} 
+                        <EventCard
+                          key={event.id}
+                          event={event}
                           isAdmin={true}
                           onEdit={(ev) => { setEditingEvent(ev); setIsFormOpen(true); }}
                           onDelete={handleDeleteEvent}
@@ -410,7 +424,7 @@ export const AdminDashboard: React.FC = () => {
                       <h2 className="text-4xl font-bold font-serif text-text-primary tracking-wide text-gradient-gold">PRO-SHOW MANAGEMENT</h2>
                       <p className="text-sm text-text-secondary mt-2 font-light">Manage headline artists and ticketed shows.</p>
                     </div>
-                    <Button 
+                    <Button
                       className="bg-primary hover:bg-primary-dark text-white rounded-lg px-4 py-2 w-full sm:w-auto"
                       onClick={() => { setEditingProshow(null); setIsProshowFormOpen(true); }}
                     >
@@ -426,9 +440,9 @@ export const AdminDashboard: React.FC = () => {
                   ) : proshows.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {proshows.map((proshow) => (
-                        <ProshowCard 
-                          key={proshow.id} 
-                          proshow={proshow} 
+                        <ProshowCard
+                          key={proshow.id}
+                          proshow={proshow}
                           isAdmin={true}
                           onEdit={(ps) => { setEditingProshow(ps); setIsProshowFormOpen(true); }}
                           onDelete={handleDeleteProshow}
@@ -458,7 +472,7 @@ export const AdminDashboard: React.FC = () => {
                       <h2 className="text-4xl font-bold font-serif text-text-primary tracking-wide text-gradient-gold">ANNOUNCEMENTS</h2>
                       <p className="text-sm text-text-secondary mt-2 font-light">Broadcast important updates to students.</p>
                     </div>
-                    <Button 
+                    <Button
                       className="bg-primary hover:bg-primary-dark text-white rounded-lg px-4 py-2 w-full sm:w-auto"
                       onClick={() => setIsAnnouncementFormOpen(true)}
                     >
@@ -470,9 +484,9 @@ export const AdminDashboard: React.FC = () => {
                   {announcements.length > 0 ? (
                     <div className="space-y-4 max-w-3xl">
                       {announcements.map((announcement) => (
-                        <AnnouncementCard 
-                          key={announcement.id} 
-                          announcement={announcement} 
+                        <AnnouncementCard
+                          key={announcement.id}
+                          announcement={announcement}
                           isAdmin={true}
                           onDelete={handleDeleteAnnouncement}
                         />
@@ -495,21 +509,21 @@ export const AdminDashboard: React.FC = () => {
       {/* Modals */}
       <AnimatePresence>
         {isFormOpen && (
-          <EventForm 
+          <EventForm
             event={editingEvent}
             onClose={() => { setIsFormOpen(false); setEditingEvent(null); }}
             onSubmit={editingEvent ? handleUpdateEvent : handleCreateEvent}
           />
         )}
         {isProshowFormOpen && (
-          <ProshowForm 
+          <ProshowForm
             proshow={editingProshow}
             onClose={() => { setIsProshowFormOpen(false); setEditingProshow(null); }}
             onSubmit={editingProshow ? handleUpdateProshow : handleCreateProshow}
           />
         )}
         {isAnnouncementFormOpen && (
-          <AnnouncementForm 
+          <AnnouncementForm
             onClose={() => setIsAnnouncementFormOpen(false)}
             onSubmit={handleCreateAnnouncement}
           />
