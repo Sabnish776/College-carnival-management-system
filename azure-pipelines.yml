@@ -74,7 +74,7 @@ stages:
             inputs:
               azureSubscription: 'Azure for Students'
               appType: webAppLinux
-              appName: 'college-carnival-backend-b3bpa5cmdjc6exhr'
+              appName: 'college-carnival-backend'
               package: '$(System.ArtifactsDirectory)/backend-jar/*.jar'
               runtimeStack: 'JAVA|17-java17'
 
@@ -96,6 +96,6 @@ stages:
             inputs:
               azureSubscription: 'Azure for Students'
               appType: webAppLinux
-              appName: 'college-carnival-frontend-emapf2f9hefnh3d6'
+              appName: 'college-carnival-frontend'
               package: '$(System.ArtifactsDirectory)/frontend-dist'
               runtimeStack: 'NODE|22-lts'
