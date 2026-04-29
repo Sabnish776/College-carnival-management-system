@@ -24,7 +24,8 @@ stages:
               npm install
               npm run build
             displayName: Install and Build React
-
+            env:
+              VITE_API_BASE_URL: $(VITE_API_BASE_URL)
           - task: PublishBuildArtifacts@1
             inputs:
               PathtoPublish: 'frontend/dist'
